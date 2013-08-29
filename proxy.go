@@ -4,9 +4,8 @@ import (
 	"bufio"
 	"github.com/ledzep2/goproxy/transport"
 	"io"
-	"log"
+        "github.com/golang/glog"
 	"net/http"
-	"os"
 	"regexp"
 	"sync/atomic"
 )
@@ -18,7 +17,7 @@ type ProxyHttpServer struct {
 	sess          int64
 	// setting Verbose to true will log information on each request sent to the proxy
 	Verbose       bool
-	Logger        *log.Logger
+	Logger        func (fmt string, args... interface{})
 	reqHandlers   []ReqHandler
 	respHandlers  []RespHandler
 	httpsHandlers []HttpsHandler
@@ -30,7 +29,7 @@ var hasPort = regexp.MustCompile(`:\d+$`)
 func (proxy *ProxyHttpServer) copyAndClose(w io.WriteCloser, r io.Reader) {
 	io.Copy(w, r)
 	if err := w.Close(); err != nil {
-		proxy.Logger.Println("Error closing", err)
+		proxy.Logger("Error closing %s", err)
 	}
 }
 
@@ -146,7 +145,7 @@ func NewProxyHttpServer(tr *transport.Transport) *ProxyHttpServer {
             tr = &transport.Transport{TLSClientConfig: tlsClientSkipVerify}
         }
 	return &ProxyHttpServer{
-		Logger:        log.New(os.Stderr, "", log.LstdFlags),
+		Logger:        glog.Infof,
 		reqHandlers:   []ReqHandler{},
 		respHandlers:  []RespHandler{},
 		httpsHandlers: []HttpsHandler{},
