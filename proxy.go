@@ -2,7 +2,7 @@ package goproxy
 
 import (
 	"bufio"
-	"github.com/elazarl/goproxy/transport"
+	"github.com/ledzep2/goproxy/transport"
 	"io"
 	"log"
 	"net/http"
@@ -141,12 +141,15 @@ func (proxy *ProxyHttpServer) ServeHTTP(w http.ResponseWriter, r *http.Request) 
 }
 
 // New proxy server, logs to StdErr by default
-func NewProxyHttpServer() *ProxyHttpServer {
+func NewProxyHttpServer(tr *transport.Transport) *ProxyHttpServer {
+        if tr == nil {
+            tr = &transport.Transport{TLSClientConfig: tlsClientSkipVerify}
+        }
 	return &ProxyHttpServer{
 		Logger:        log.New(os.Stderr, "", log.LstdFlags),
 		reqHandlers:   []ReqHandler{},
 		respHandlers:  []RespHandler{},
 		httpsHandlers: []HttpsHandler{},
-		tr:            &transport.Transport{TLSClientConfig: tlsClientSkipVerify},
+		tr:            tr,
 	}
 }

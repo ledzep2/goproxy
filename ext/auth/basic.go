@@ -3,7 +3,7 @@ package auth
 import (
 	"bytes"
 	"encoding/base64"
-	"github.com/elazarl/goproxy"
+	"github.com/ledzep2/goproxy"
 	"io/ioutil"
 	"net/http"
 	"strings"

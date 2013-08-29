@@ -1,7 +1,7 @@
 package goproxy
 
 import (
-	"github.com/elazarl/goproxy/transport"
+	"github.com/ledzep2/goproxy/transport"
 	"net/http"
         "net"
 	"regexp"
