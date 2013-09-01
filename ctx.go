@@ -3,6 +3,7 @@ package goproxy
 import (
 	"github.com/elazarl/goproxy/transport"
 	"net/http"
+        "net"
 	"regexp"
 )
 
@@ -21,6 +22,8 @@ type ProxyCtx struct {
 	UserData interface{}
 	// Will connect a request to a response
 	Session  int64
+        // Conn
+        Conn net.Conn
 	proxy    *ProxyHttpServer
 }
 

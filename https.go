@@ -56,6 +56,7 @@ func (proxy *ProxyHttpServer) handleHttps(w http.ResponseWriter, r *http.Request
 	ctx.Logf("Running %d CONNECT handlers", len(proxy.httpsHandlers))
 	todo, host := OkConnect, r.URL.Host
 	ctx.Req = r
+        ctx.Conn = proxyClient
 	for _, h := range proxy.httpsHandlers {
 		newtodo, newhost := h.HandleConnect(host, ctx)
 		if newtodo != nil {
@@ -63,6 +64,7 @@ func (proxy *ProxyHttpServer) handleHttps(w http.ResponseWriter, r *http.Request
 		}
 		ctx.Logf("handler: %v %s", todo, host)
 	}
+        proxyClient = ctx.Conn
 	switch todo.Action {
 	case ConnectAccept:
 		if !hasPort.MatchString(host) {
